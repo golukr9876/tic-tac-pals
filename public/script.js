@@ -30,6 +30,30 @@ document.addEventListener('DOMContentLoaded', () => {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
+    socket.on('clearBoard', () => {
+    clearBoard();
+});
+
+// Update gameStarted listener
+socket.on('gameStarted', (data) => {
+    currentTurn = data.starter;
+    gameActive = true;
+    starterSelection.classList.add('hidden');
+    gameContainer.classList.remove('hidden');
+    resultMessage.classList.add('hidden');
+    updateBoardUI(data.board || Array(9).fill(null));
+    updateStatusMessage();
+});
+
+// Update playerMove listener
+socket.on('playerMove', (data) => {
+    currentTurn = data.nextTurn;
+    if (data.board) {
+        updateBoardUI(data.board);
+    }
+    updateStatusMessage();
+});
+
 
     socket.on('connect', () => {
         console.log('Connected to server');
@@ -158,15 +182,20 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function updateBoardUI(board) {
         board.forEach((cell, index) => {
-            if (cell) {
-                cells[index].textContent = cell;
-                cells[index].setAttribute('data-player', cell === '💙' ? 'blue' : 'green');
-                cells[index].classList.remove('winner');
-            } else {
-                cells[index].textContent = '';
-                cells[index].removeAttribute('data-player');
-                cells[index].classList.remove('winner');
-            }
+            // if (cell) {
+            //     cells[index].textContent = cell;
+            //     cells[index].setAttribute('data-player', cell === '💙' ? 'blue' : 'green');
+            //     cells[index].classList.remove('winner');
+            // } else {
+            //     cells[index].textContent = '';
+            //     cells[index].removeAttribute('data-player');
+            //     cells[index].classList.remove('winner');
+            // }
+
+        cells[index].textContent = cell || '';
+        cells[index].setAttribute('data-player', cell === '💙' ? 'blue' : 'green');
+        cells[index].classList.remove('winner');
+
         });
     }
     

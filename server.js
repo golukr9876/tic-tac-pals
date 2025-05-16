@@ -51,28 +51,42 @@ io.on('connection', (socket) => {
     }
     
     // Handle starter selection
-    socket.on('chooseStarter', (starter) => {
-        if (gameState.playersReady < 2) {
-            gameState.playersReady++;
+// Existing code ke bad yeh changes karein:
+
+// Game starting event ko update karein
+socket.on('chooseStarter', (starter) => {
+    if (gameState.playersReady < 2) {
+        gameState.playersReady++;
+        
+        // Assign symbols
+        const player1Symbol = starter === '💙' ? '💙' : '💚';
+        const player2Symbol = starter === '💙' ? '💚' : '💙';
+        
+        players[0].emit('assignSymbol', player1Symbol);
+        players[1].emit('assignSymbol', player2Symbol);
+        
+        if (gameState.playersReady === 2) {
+            gameState.currentTurn = starter;
+            gameState.gameActive = true;
+            gameState.board = Array(9).fill(null);
             
-            // Assign symbols
-            if (starter === '💙') {
-                players[0].emit('assignSymbol', '💙');
-                players[1].emit('assignSymbol', '💚');
-            } else {
-                players[0].emit('assignSymbol', '💚');
-                players[1].emit('assignSymbol', '💙');
-            }
+            // Clear any previous game state
+            io.emit('clearBoard');
             
-            // Start game when both players are ready
-            if (gameState.playersReady === 2) {
-                gameState.currentTurn = starter;
-                gameState.gameActive = true;
-                gameState.board = Array(9).fill(null);
-                io.emit('gameStarted', starter);
-            }
+            // Send game started event with starter info
+            io.emit('gameStarted', { 
+                starter: starter,
+                board: gameState.board 
+            });
+            
+            // Force send first turn update
+            io.emit('playerMove', { 
+                nextTurn: starter,
+                board: gameState.board 
+            });
         }
-    });
+    }
+});
     
     socket.on('chatMessage', (data) => {
     // Broadcast the message to both players
