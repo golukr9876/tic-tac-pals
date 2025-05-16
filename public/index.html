@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Pals 💙 vs 💚</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Tic Tac Pals <span class="heart-blue">💙</span> vs <span class="heart-green">💚</span></h1>
+        
+        <div id="status-message" class="status-message">Connecting to game...</div>
+        
+        <div id="starter-selection" class="starter-selection hidden">
+            <p>Choose who starts first:</p>
+            <div class="starter-buttons">
+                <button id="choose-blue" class="heart-button blue">💙</button>
+                <button id="choose-green" class="heart-button green">💚</button>
+            </div>
+        </div>
+        
+        <div id="game-container" class="hidden">
+            <div class="game-board">
+                <div class="cell" data-index="0"></div>
+                <div class="cell" data-index="1"></div>
+                <div class="cell" data-index="2"></div>
+                <div class="cell" data-index="3"></div>
+                <div class="cell" data-index="4"></div>
+                <div class="cell" data-index="5"></div>
+                <div class="cell" data-index="6"></div>
+                <div class="cell" data-index="7"></div>
+                <div class="cell" data-index="8"></div>
+            </div>
+            
+            <div id="result-message" class="result-message hidden">
+                <p id="result-text"></p>
+                <button id="play-again" class="play-again-button">Play Again 💫</button>
+            </div>
+        </div>
+        
+        <div id="room-full" class="room-full hidden">
+            <p>Sorry, the game room is full with two players already. 😢</p>
+            <p>Try again later!</p>
+        </div>
+
+        <div class="chat-container">
+            <div id="chat-messages" class="chat-messages"></div>
+            <div class="chat-input">
+                <input type="text" id="chat-input" placeholder="Type a message..." maxlength="100">
+                <button id="send-button">Send 💬</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
